@@ -1,4 +1,6 @@
 class Solution {
+    // Memoization
+    
     // Recursive helper function with memoization
     public int solve(int[] arr, int i, int[] dp) {
         // No element to pick
@@ -40,5 +42,87 @@ public class Main {
 
         // Print result
         System.out.println(obj.maximumNonAdjacentSum(arr));
+    }
+}
+
+
+// Tabulation
+
+class Solution {
+    // Function to return maximum sum of non-adjacent elements
+    public int maximumNonAdjacentSum(int[] arr) {
+        // Get the size of array
+        int n = arr.length;
+
+        // If only one element, return it
+        if (n == 1) return arr[0];
+
+        // Initialize dp array
+        int[] dp = new int[n];
+
+        // Base case
+        dp[0] = arr[0];
+
+        // Compare first two elements
+        dp[1] = Math.max(arr[0], arr[1]);
+
+        // Iterate from index 2
+        for (int i = 2; i < n; i++) {
+            // Take current and dp[i-2] or just dp[i-1]
+            dp[i] = Math.max(arr[i] + dp[i - 2], dp[i - 1]);
+        }
+
+        // Return result from last index
+        return dp[n - 1];
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] arr = {2, 1, 4, 9};
+        System.out.println(sol.maximumNonAdjacentSum(arr));
+    }
+}
+
+
+// Space Optimization
+
+class Solution {
+    // Function to return maximum sum of non-adjacent elements
+    public int maxSum(int[] nums) {
+        // Handle edge case for empty input
+        if (nums.length == 0) return 0;
+
+        // Initialize two tracking sums
+        int prev2 = 0;
+        int prev = nums[0];
+
+        // Traverse through the array
+        for (int i = 1; i < nums.length; i++) {
+            // Include current by adding it to two steps back
+            int include = nums[i] + prev2;
+
+            // Exclude current by taking previous best
+            int exclude = prev;
+
+            // Choose max of include and exclude
+            int curr = Math.max(include, exclude);
+
+            // Update tracking variables
+            prev2 = prev;
+            prev = curr;
+        }
+
+        // Final result is stored in prev
+        return prev;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        int[] arr = {3, 2, 5, 10, 7};
+        Solution obj = new Solution();
+        System.out.println(obj.maxSum(arr));
     }
 }
